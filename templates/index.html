@@ -1,0 +1,39 @@
+<!doctype html>
+<link rel="stylesheet" type="text/css" href="/static/base.css">
+<title>Hello from Flask</title>
+
+<table>
+	<tr>
+		<th colspan='4'> SCENE CONTROL</th>
+	</tr>
+	<tr>
+		<td class='button' onclick="window.location.href='/off'"> OFF </td>
+		<td class='button' onclick="window.location.href='/wipe'"> WIPE </td>
+		<td class='button' onclick="window.location.href='/alarm'"> ALARM </td>
+		<td class='button' onclick="window.location.href='/'"> INDEX </td>
+	</tr>
+	<tr>
+		<td class='button' onclick="window.location.href='/quarter/1'"> QUARTER1 </td>
+		<td class='button' onclick="window.location.href='/quarter/2'"> QUARTER2 </td>
+		<td class='button' onclick="window.location.href='/quarter/3'"> QUARTER3 </td>
+		<td class='button' onclick="window.location.href='/quarter/4'"> QUARTER4 </td>
+	</tr>
+	<tr>
+		<td class='button' onclick="window.location.href='/centre'"> CENTRE </td>
+		<td class='button' onclick="window.location.href='/fade_out'"> FADE OUT </td>
+		<td class='button' onclick="window.location.href='/queue/meter'"> METER 1 </td>
+		<td class='button' onclick="window.location.href='/queue/meter2'"> METER 2 </td>
+	</tr>
+
+</table>
+
+
+{% if name %}
+  <h1>Last Task {{ name }}</h1>
+{% else %}
+  <h1>No task defined</h1>
+{% endif %}
+
+{% if count %}
+  <h2> Wipe runs {{ count }} </h2>
+{% endif %}

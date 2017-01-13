@@ -1,0 +1,26 @@
+
+
+body {
+	font-family: helvetica;
+}
+
+p {
+    color: green;
+    text-align: center;
+}
+
+td.button {
+		background-color: grey;
+		border-style: solid;
+		width: 200px;
+		border-width: 2px;
+		border-color: black;
+		font-size: 32px;
+		color: white;
+		font-family: helvetica;
+		text-align: center;
+}
+
+td.button:hover {
+	background-color: blue;
+}
