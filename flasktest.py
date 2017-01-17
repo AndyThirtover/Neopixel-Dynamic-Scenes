@@ -19,6 +19,7 @@ def json_data():
     global thread_data
     return jsonify(**thread_data)
 
+@app.route('/meter/<stripnumber>/<value>')
 @app.route('/meter/<stripnumber>/<value>/<start>/<end>')
 def do_meter(stripnumber,value,start=0,end=12):
     strips = [strip1,strip2]
@@ -27,7 +28,8 @@ def do_meter(stripnumber,value,start=0,end=12):
 
 
 @app.route('/queue/<job>')
-def neo_queue(job):
+@app.route('/queue/<job>/<parameter>')
+def neo_queue(job, parameter=None):
     if job == 'neo_off':
         neoOff(strip1,strip1_event)
     elif job == 'neo_off2':
@@ -36,8 +38,8 @@ def neo_queue(job):
         strip1_event.clear()
         centre_fade(strip1,128,128,64)
     elif 'quarter' in job:
-        strip1_event.clear()
-        quarter(strip1,job[-1],Color(MAX,0,0))
+        neoOff(strip1,strip1_event)
+        quarter(strip1,parameter,Color(MAX,0,0))
     elif job == 'rotate':
         neoOff(strip1,strip1_event)
         rotate_thread = threading.Thread(name='Rotate',

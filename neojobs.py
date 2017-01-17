@@ -70,7 +70,6 @@ def rotate(strip,event):
         thread_data.update({'count' : COUNT})
 
 def quarter(strip,segment,value):
-    neoOff(strip)
     seg=int(segment)
     for i in range((seg-1)*(strip.numPixels()/4),seg*(strip.numPixels()/4)):
         strip.setPixelColor(i,value)
