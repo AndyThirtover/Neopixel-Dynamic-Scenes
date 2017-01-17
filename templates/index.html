@@ -1,26 +1,37 @@
 <!doctype html>
+<html>
 <link rel="stylesheet" type="text/css" href="/static/base.css">
-<title>Hello from Flask</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<title>Neo Pixels Scene Setting</title>
+
+<body>
 
 <table>
 	<tr>
 		<th colspan='4'> SCENE CONTROL</th>
 	</tr>
 	<tr>
-		<td class='button' onclick="window.location.href='/off'"> OFF </td>
-		<td class='button' onclick="window.location.href='/wipe'"> WIPE </td>
-		<td class='button' onclick="window.location.href='/alarm'"> ALARM </td>
+		<td class='button' onclick="window.location.href='/queue/neo_off'"> OFF RGBW </td>
+		<td class='button' onclick="window.location.href='/queue/rotate'"> ROTATE </td>
+		<td class='button' onclick="window.location.href='/queue/alarm'"> ALARM </td>
 		<td class='button' onclick="window.location.href='/'"> INDEX </td>
 	</tr>
 	<tr>
-		<td class='button' onclick="window.location.href='/quarter/1'"> QUARTER1 </td>
-		<td class='button' onclick="window.location.href='/quarter/2'"> QUARTER2 </td>
-		<td class='button' onclick="window.location.href='/quarter/3'"> QUARTER3 </td>
-		<td class='button' onclick="window.location.href='/quarter/4'"> QUARTER4 </td>
+		<td class='button' onclick="window.location.href='/queue/quarter1'"> QUARTER1 </td>
+		<td class='button' onclick="window.location.href='/queue/quarter2'"> QUARTER2 </td>
+		<td class='button' onclick="window.location.href='/queue/quarter3'"> QUARTER3 </td>
+		<td class='button' onclick="window.location.href='/queue/quarter4'"> QUARTER4 </td>
 	</tr>
 	<tr>
-		<td class='button' onclick="window.location.href='/centre'"> CENTRE </td>
-		<td class='button' onclick="window.location.href='/fade_out'"> FADE OUT </td>
+		<td class='button' onclick="window.location.href='/queue/centre_fade'"> CENTRE </td>
+		<td class='button' onclick="window.location.href='/queue/fade_out'"> FADE OUT </td>
+	</tr>
+	<tr>
+		<th colspan="4"> STRIP 2 Functions </th>
+	</tr>
+	<tr>
+		<td class='button' onclick="window.location.href='/queue/neo_off2'"> OFF RGB</td>
 		<td class='button' onclick="window.location.href='/queue/meter'"> METER 1 </td>
 		<td class='button' onclick="window.location.href='/queue/meter2'"> METER 2 </td>
 	</tr>
@@ -37,3 +48,22 @@
 {% if count %}
   <h2> Wipe runs {{ count }} </h2>
 {% endif %}
+
+
+<button id="button">Clickage</button>
+
+<div>
+a div
+</div>
+
+<script>
+$("button").click(function(){
+    $.getJSON("/json_data", function(result){
+        $.each(result, function(i, field){
+            $("div").append(field + " ");
+        });
+    });
+});
+</script>
+</body>
+</html>
