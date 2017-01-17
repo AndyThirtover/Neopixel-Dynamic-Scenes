@@ -3,7 +3,7 @@
 <link rel="stylesheet" type="text/css" href="/static/base.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<title>Neo Pixels Scene Setting</title>
+<title>NeoPixels Scene Setting</title>
 
 <body>
 
@@ -52,15 +52,22 @@
 
 <button id="button">Clickage</button>
 
-<div>
-a div
-</div>
+<table>
+	<tr>
+		<th>Rotate Count</th>
+		<th>Max Brightness</th>
+	</tr>
+	<tr>
+		<td id='count'> </td>
+		<td id='max_brightness'> </td>
+	</tr>
+</table>
 
 <script>
 $("button").click(function(){
     $.getJSON("/json_data", function(result){
-        $.each(result, function(i, field){
-            $("div").append(field + " ");
+        $.each(result, function(key, field){
+        	$('#'+key).text(field) ;
         });
     });
 });
