@@ -6,7 +6,6 @@ import logging
 import time
 from neojobs import *
 
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -17,9 +16,8 @@ def hello_world():
 
 @app.route('/json_data')
 def json_data():
-    global COUNT
-    the_dict = {'data':'238', 'count':COUNT}
-    return jsonify(**the_dict)
+    global thread_data
+    return jsonify(**thread_data)
 
 @app.route('/queue/<job>')
 def neo_queue(job):
