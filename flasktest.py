@@ -1,61 +1,68 @@
 from flask import Flask
+from flask import jsonify
 from flask import render_template
 import threading
 import logging
 import time
 from neojobs import *
 
-# Kick off the worker for neopixel jobs.
-neo_thread = threading.Thread(name='NeoDaemon', target=neo_queue, args=[neo_event,])
-neo_thread.setDaemon(True)
-neo_thread.start()
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
+    all_threads = threading.enumerate()
+    print (str(all_threads))
     return render_template('index.html', name='No Operation')
 
-@app.route('/wipe')
-def wipe():
-    neo_jobs.put('rotate')
-    neo_event.set()
-    return render_template('index.html', name='Wipe Complete', count=COUNT)
+@app.route('/json_data')
+def json_data():
+    global COUNT
+    the_dict = {'data':'238', 'count':COUNT}
+    return jsonify(**the_dict)
 
-@app.route('/alarm')
-def do_alarm():
-    neo_jobs.put('alarm')
-    neo_event.set()
-    return render_template('index.html', name='Alarm')
+@app.route('/queue/<job>')
+def neo_queue(job):
+    if job == 'neo_off':
+        neoOff(strip1,strip1_event)
+    elif job == 'neo_off2':
+        neoOff(strip2,strip2_event)
+    elif job == 'centre_fade':
+        strip1_event.clear()
+        centre_fade(strip1,128,128,64)
+    elif 'quarter' in job:
+        strip1_event.clear()
+        quarter(strip1,job[-1],Color(MAX,0,0))
+    elif job == 'rotate':
+        neoOff(strip1,strip1_event)
+        rotate_thread = threading.Thread(name='Rotate',
+                                         target=rotate,
+                                         args=(strip1,strip1_event,))
+        rotate_thread.start()
 
-@app.route('/off')
-def off():
-    neo_jobs.put('neo_off')
-    neo_event.set()
-    return render_template('index.html', name='Neo Pixels Off')
+    elif job == 'alarm':
+        neoOff(strip1,strip1_event)
+        alarm_thread = threading.Thread(name='Alarm',
+                                        target=alarm,
+                                        args=(strip1,strip1_event,Color(255,0,0),Color(8,0,0)))
+        alarm_thread.start()
 
-@app.route('/centre')
-def centre():
-    neo_jobs.put('centre_fade')
-    neo_event.set()
-    return render_template('index.html', name='Centre Fade')
+    elif job == 'fade_out':
+        strip1_event.set()
+        fade_thread = threading.Thread(name='FadeOut',
+                                        target=fade_out,
+                                        args=(strip1,))
+        fade_thread.start()
 
-@app.route('/fade_out')
-def fadetozero():
-    neo_jobs.put('fade_out')
-    neo_event.set()
-    return render_template('index.html', name='Fade Out')
+    elif job == 'meter':
+        meter_thread = threading.Thread(name='Meter',
+                                        target=random_meter,
+                                        args=(strip2,12,24,strip2_event,Color(0,MAX,0),Color(1,0,1),))
+        meter_thread.start()
 
-@app.route('/quarter/<segment>')
-def do_quarter(segment):
-    quarter(segment,Color(MAX,0,0))
-    return render_template('index.html', name='Quarter')
-
-@app.route('/queue/<job_name>')
-def do_queue(job_name):
-    neo_jobs.put(job_name)
-    neo_event.set()
-    return render_template('index.html', name='Job Queued:' + job_name)
-
-
-
+    elif job == 'meter2':
+        meter2_thread = threading.Thread(name='Meter',
+                                        target=random_meter,
+                                        args=(strip2,0,12,strip2_event,Color(MAX/2,0,MAX/2),Color(2,0,0),0.9,))
+        meter2_thread.start()
+    return render_template('index.html', name='Job Queued:' + job)

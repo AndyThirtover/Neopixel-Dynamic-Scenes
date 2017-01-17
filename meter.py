@@ -8,6 +8,7 @@ from neopixel import *
 # Meter routines for NeoPixels
 
 def random_meter(strip,start,end,term_event,set_color,unset_color,hold_time=.3):
+	term_event.clear()  # will be set by others when we should stop
 	last_top = start
 	while not term_event.is_set():
 		value = random.random()

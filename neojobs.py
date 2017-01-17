@@ -6,91 +6,82 @@ from neopixel import *
 from meter import *
 
 
+
 # LED strip configuration:
 LED_COUNT   = 24      # Number of LED pixels.
 LED_PIN     = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA     = 5       # DMA channel to use for generating signal (try 5)
 LED_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
+LED_STRIP   = ws.SK6812_STRIP_GBRW
 
-MAX = 128
-COUNT = 0
+
+#LED2 strip Configuration
+
+LED2_COUNT   = 24      # Number of LED pixels.
+LED2_PIN     = 13      # GPIO pin connected to the pixels (must support PWM!).
+LED2_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
+LED2_DMA     = 6       # DMA channel to use for generating signal (try 5)
+LED2_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
+LED2_STRIP   = ws.WS2811_STRIP_GRB
+
+
+
+MAX = 255
+
+COUNT = 1
 
 NEO_RUN = True
 
 # Create NeoPixel object with appropriate configuration.
-strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT)
+strip1 = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, 255, 0, LED_STRIP)
+strip2 = Adafruit_NeoPixel(LED2_COUNT, LED2_PIN, LED2_FREQ_HZ, LED2_DMA, LED2_INVERT, 255, 1, LED2_STRIP)
 # Intialize the library (must be called once before other functions).
-strip.begin()
+strip1.begin()
+strip2.begin()
 
 neo_jobs = Queue.Queue()  # This is the queue to drop neo jobs onto
-neo_event = threading.Event()
-
-def neo_queue(neo_event):
-    while NEO_RUN:
-        if neo_event.wait(.1):
-            neo_event.clear()
-            time.sleep(.5)
-            job = neo_jobs.get()
-            print ('Queued:' + str(job))
-            if job == 'neo_off':
-                neoOff(strip)
-            elif job == 'centre_fade':
-                centre_fade(strip,128,128,64)
-            elif job == 'rotate':
-                rotate()
-            elif job == 'alarm':
-                alarm(Color(0,255,0),Color(0,8,0))
-            elif job == 'fade_out':
-                fade_out(strip)
-            elif job == 'meter':
-                meter_thread = threading.Thread(name='Meter',
-                                                target=random_meter,
-                                                args=(strip,12,24,neo_event,Color(0,MAX,0),Color(1,0,1),))
-                meter_thread.start()
-
-            elif job == 'meter2':
-                meter2_thread = threading.Thread(name='Meter',
-                                                target=random_meter,
-                                                args=(strip,0,12,neo_event,Color(MAX/2,0,MAX/2),Color(2,0,0),0.9,))
-                meter2_thread.start()
-
-
-
+strip1_event = threading.Event()
+strip2_event = threading.Event()
 
 def colorWipe(strip, color, wait_ms=50):
     """Wipe color across display a pixel at a time."""
     for i in range(strip.numPixels()):
-        if not neo_event.is_set():
+        if not strip1_event.is_set():
             strip.setPixelColor(i, color)
             strip.show()
             time.sleep(wait_ms/1000.0)
         else:
             break
 
-def neoOff(strip):
+def neoOff(strip,event):
+    event.set() # tell other threads to stop
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0,0,0))
         strip.show()
+    event.set()
 
-def rotate():
+def rotate(strip,event):
+    print('Rotate Started')
+    event.clear()
     global COUNT
-    while not neo_event.is_set():
+    while not event.is_set():
         colorWipe(strip, Color(MAX, 0, 0))  # Red wipe
         colorWipe(strip, Color(0, MAX, 0))  # Blue wipe
         colorWipe(strip, Color(0, 0, MAX))  # Green wipe
         COUNT += 3
-        #print ("Rotate Called ")
+        print ("Rotate Called ")
 
-def quarter(segment,value):
+def quarter(strip,segment,value):
     neoOff(strip)
     seg=int(segment)
     for i in range((seg-1)*(strip.numPixels()/4),seg*(strip.numPixels()/4)):
         strip.setPixelColor(i,value)
         strip.show()
 
-def alarm(highlight, background, wait_ms=50):
-	while not neo_event.is_set():
+def alarm(strip, event, highlight, background, wait_ms=50):
+	event.clear()
+	while not event.is_set():
 		for i in range(strip.numPixels()):
 			for j in range(strip.numPixels()):
 				if (j==i):
@@ -124,7 +115,7 @@ def light_floor(value,distance,max=MAX):
 def centre_fade(strip,r,g,b,wait_ms=5):
     for j in range(MAX*2):
         for i in range(12):
-            if not neo_event.is_set():
+            if not strip1_event.is_set():
                 l = colour_floor(r,g,b,i,j)
                 strip.setPixelColor(12+i,l)
                 strip.setPixelColor(11-i,l)
@@ -140,7 +131,7 @@ def not_zero(a,b,c):
 
 def fade_out(strip):
     run = True
-    while run and (not neo_event.is_set()):
+    while run:
         run = False
         for i in range(LED_COUNT):
             current = strip.getPixelColor(i)
