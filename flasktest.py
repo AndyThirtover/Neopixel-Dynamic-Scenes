@@ -19,6 +19,13 @@ def json_data():
     global thread_data
     return jsonify(**thread_data)
 
+@app.route('/meter/<stripnumber>/<value>/<start>/<end>')
+def do_meter(stripnumber,value,start=0,end=12):
+    strips = [strip1,strip2]
+    value_meter(strips[int(stripnumber)],int(value),int(start),int(end),Color(255,0,0),Color(8,0,0))
+    return render_template('index.html', name='No Operation')
+
+
 @app.route('/queue/<job>')
 def neo_queue(job):
     if job == 'neo_off':

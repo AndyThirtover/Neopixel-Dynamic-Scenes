@@ -6,8 +6,7 @@ from neopixel import *
 from meter import *
 
 
-
-# LED strip configuration:
+# LED strip 2 configuration:
 LED_COUNT   = 24      # Number of LED pixels.
 LED_PIN     = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -16,7 +15,7 @@ LED_INVERT  = False   # True to invert the signal (when using NPN transistor lev
 LED_STRIP   = ws.SK6812_STRIP_GBRW
 
 
-#LED2 strip Configuration
+#LED strip 2 Configuration
 
 LED2_COUNT   = 24      # Number of LED pixels.
 LED2_PIN     = 13      # GPIO pin connected to the pixels (must support PWM!).
@@ -25,13 +24,11 @@ LED2_DMA     = 6       # DMA channel to use for generating signal (try 5)
 LED2_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
 LED2_STRIP   = ws.WS2811_STRIP_GRB
 
-
 MAX = 255
 
-NEO_RUN = True
-
-thread_data = {'count' : 0, 'max_brightness' : MAX}
-
+thread_data = {'count' : 0, 
+            'max_brightness' : MAX
+            }
 
 # Create NeoPixel object with appropriate configuration.
 strip1 = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, 255, 0, LED_STRIP)

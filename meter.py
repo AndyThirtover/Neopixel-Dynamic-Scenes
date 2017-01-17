@@ -26,3 +26,13 @@ def random_meter(strip,start,end,term_event,set_color,unset_color,hold_time=.3):
 				break
 			else:
 				strip.show()
+
+
+def value_meter(strip,value,start,end,set_color,unset_color):
+	print ("Start" + str(start) + " End " + str(end) + " Value " + str(value))
+	top = int((end-start)*value/(end-start))+start
+	for i in range(start,top):
+		strip.setPixelColor(i,set_color)
+	for i in range(top,end):
+		strip.setPixelColor(i,unset_color)
+	strip.show()
