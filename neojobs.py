@@ -26,12 +26,12 @@ LED2_INVERT  = False   # True to invert the signal (when using NPN transistor le
 LED2_STRIP   = ws.WS2811_STRIP_GRB
 
 
-
 MAX = 255
 
-COUNT = 1
-
 NEO_RUN = True
+
+thread_data = {'count' : 0, 'max_brightness' : MAX}
+
 
 # Create NeoPixel object with appropriate configuration.
 strip1 = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, 255, 0, LED_STRIP)
@@ -62,15 +62,15 @@ def neoOff(strip,event):
     event.set()
 
 def rotate(strip,event):
-    print('Rotate Started')
     event.clear()
-    global COUNT
+    global thread_data
+    COUNT = thread_data['count']
     while not event.is_set():
         colorWipe(strip, Color(MAX, 0, 0))  # Red wipe
         colorWipe(strip, Color(0, MAX, 0))  # Blue wipe
         colorWipe(strip, Color(0, 0, MAX))  # Green wipe
         COUNT += 3
-        print ("Rotate Called ")
+        thread_data.update({'count' : COUNT})
 
 def quarter(strip,segment,value):
     neoOff(strip)
