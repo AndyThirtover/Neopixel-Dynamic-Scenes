@@ -6,13 +6,14 @@ from neopixel import *
 from meter import *
 
 
-# LED strip 2 configuration:
-LED_COUNT   = 24      # Number of LED pixels.
+# LED strip 1 configuration:
+LED_COUNT   = 300      # Number of LED pixels.
 LED_PIN     = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA     = 5       # DMA channel to use for generating signal (try 5)
 LED_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
-LED_STRIP   = ws.SK6812_STRIP_GBRW
+#LED_STRIP   = ws.SK6812_STRIP_GBRW
+LED_STRIP   = ws.WS2811_STRIP_GRB
 
 
 #LED strip 2 Configuration
@@ -24,7 +25,7 @@ LED2_DMA     = 6       # DMA channel to use for generating signal (try 5)
 LED2_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
 LED2_STRIP   = ws.WS2811_STRIP_GRB
 
-MAX = 255
+MAX = 127
 
 thread_data = {'count' : 0, 
             'max_brightness' : MAX
@@ -99,8 +100,11 @@ def colour_floor(r,g,b,distance,ratio):
     return Color(light_floor(g*fade,distance,g),light_floor(r*fade,distance,r),light_floor(b*fade,distance,b))
 
 
-def light_floor(value,distance,max=MAX):
-    intensity = value - (distance*distance)
+def light_floor(value,distance,max=MAX,shallow=True):
+    if shallow :
+        intensity = value - (distance*2)
+    else:
+        intensity = value - (distance*distance)
     if intensity < 0:
         return 0
     elif intensity > max:
@@ -110,14 +114,20 @@ def light_floor(value,distance,max=MAX):
 
 def centre_fade(strip,r,g,b,wait_ms=5):
     for j in range(MAX*2):
-        for i in range(12):
+        for i in range(72):
             if not strip1_event.is_set():
                 l = colour_floor(r,g,b,i,j)
-                strip.setPixelColor(12+i,l)
-                strip.setPixelColor(11-i,l)
+                strip.setPixelColor(72+i,l)
+                strip.setPixelColor(71-i,l)
                 strip.show()
             else:
                 break
+
+def centre_static(strip,r,g,b, ratio=150):
+    for i in range (LED_COUNT/2):
+        strip.setPixelColor((LED_COUNT/2)+i,colour_floor(r,g,b,i,ratio))
+        strip.setPixelColor((LED_COUNT/2)-i,colour_floor(r,g,b,i,ratio))
+        strip.show()
 
 def not_zero(a,b,c):
     if (a-1) > 0 or (b-1) > 0 or (c-1) > 0:

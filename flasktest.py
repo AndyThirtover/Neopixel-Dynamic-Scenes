@@ -36,7 +36,13 @@ def neo_queue(job, parameter=None):
         neoOff(strip2,strip2_event)
     elif job == 'centre_fade':
         strip1_event.clear()
-        centre_fade(strip1,128,128,64)
+        centre_static(strip1,128,254,64)
+    elif job == 'centre_fade2':
+        strip1_event.clear()
+        centre_static(strip1,128,128,254)
+    elif job == 'centre_fade3':
+        strip1_event.clear()
+        centre_static(strip1,254,128,128)
     elif 'quarter' in job:
         neoOff(strip1,strip1_event)
         quarter(strip1,parameter,Color(MAX,0,0))
@@ -73,3 +79,8 @@ def neo_queue(job, parameter=None):
                                         args=(strip2,0,12,strip2_event,Color(MAX/2,0,MAX/2),Color(2,0,0),0.9,))
         meter2_thread.start()
     return render_template('index.html', name='Job Queued:' + job)
+
+
+
+
+app.run(host='0.0.0.0', debug=True)
