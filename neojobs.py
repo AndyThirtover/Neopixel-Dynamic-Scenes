@@ -31,7 +31,7 @@ MAX = 127
 RED = Color(128,0,0)
 AMBER = Color(128,40,0)
 GREEN = Color(0,128,0)
-RUN_BLUE = Color(16,96,224)
+RUN_BLUE = Color(16,96,192)
 
 thread_data = {'count' : 0, 
             'max_brightness' : MAX
