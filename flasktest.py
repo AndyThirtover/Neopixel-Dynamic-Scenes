@@ -4,6 +4,7 @@ from flask import render_template
 import threading
 import logging
 import time
+import random
 from neojobs import *
 
 app = Flask(__name__)
@@ -78,6 +79,18 @@ def neo_queue(job, parameter=None):
                                         target=random_meter,
                                         args=(strip2,0,12,strip2_event,Color(MAX/2,0,MAX/2),Color(2,0,0),0.9,))
         meter2_thread.start()
+
+    elif 'random_change' in job:
+        strip1_event.set()
+        speed = 5
+        if not parameter:
+            parameter = "random"
+        random_change_thread = threading.Thread(name='RandomChange',
+                                        target=random_change,
+                                        args=(strip1,parameter,speed))
+        random_change_thread.start()
+
+
     return render_template('index.html', name='Job Queued:' + job)
 
 

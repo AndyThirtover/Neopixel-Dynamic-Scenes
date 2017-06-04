@@ -4,10 +4,11 @@ import logging
 import time
 from neopixel import *
 from meter import *
+import random
 
 
 # LED strip 1 configuration:
-LED_COUNT   = 300      # Number of LED pixels.
+LED_COUNT   = 18      # Number of LED pixels.
 LED_PIN     = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA     = 5       # DMA channel to use for generating signal (try 5)
@@ -26,6 +27,11 @@ LED2_INVERT  = False   # True to invert the signal (when using NPN transistor le
 LED2_STRIP   = ws.WS2811_STRIP_GRB
 
 MAX = 127
+
+RED = Color(128,0,0)
+AMBER = Color(128,40,0)
+GREEN = Color(0,128,0)
+RUN_BLUE = Color(16,96,224)
 
 thread_data = {'count' : 0, 
             'max_brightness' : MAX
@@ -147,4 +153,27 @@ def fade_out(strip):
                 run = True
         strip.show()
 
+def random_change(strip,web_param,wait_ms=5):
+    strip_seq = []
+    for i in range(strip.numPixels()):
+        strip_seq.append(i)
+    random.shuffle(strip_seq)
 
+    if web_param == 'random':
+        new_colour = Color(random.randint(0,128),random.randint(0,128),random.randint(0,128))
+    elif web_param == 'red':
+        new_colour = RED
+    elif web_param == 'amber':
+        new_colour = AMBER
+    elif web_param == 'green':
+        new_colour = GREEN
+    elif web_param == 'run':
+        new_colour = RUN_BLUE
+    else:
+        new_colour = Color(2,0,0)
+
+
+    for p in strip_seq:
+        strip.setPixelColor(p,new_colour)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
