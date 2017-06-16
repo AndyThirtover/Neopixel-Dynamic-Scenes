@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<link rel="stylesheet" type="text/css" href="/static/base.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<title>NeoPixels Configuration Page</title>
+
+<body>
+
+
+<button id="button">Config</button>
+
+<table>
+	<tr>
+		<th>LED COUNT</th>
+		<th>LED PIN</th>
+		<th>STRIP TYPE</th>
+	</tr>
+	<tr>
+		<td id='LED_COUNT'> </td>
+		<td id='LED_PIN'> </td>
+		<td id='LED_STRIP'> </td>
+	</tr>
+
+</table>
+
+<script>
+$("button").click(function(){
+    $.getJSON("/json_config", function(result){
+        $.each(result, function(key, field){
+        	$('#'+key).text(field) ;
+        });
+    });
+});
+</script>
+
+<form>
+    LED COUNT
+    <input type='text' name='LED_COUNT' />
+    <input type='submit' name='submit' />
+</form>
+
+
+</body>
+</html>
