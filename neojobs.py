@@ -27,12 +27,12 @@ def write_config(config):
 
 # LED strip 1 configuration:
 LED_COUNT   = config['LED_COUNT']      # Number of LED pixels.
-LED_PIN     = config['LED_PIN']      # GPIO pin connected to the pixels (must support PWM!).
+LED_PIN     = 18     # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA     = 5       # DMA channel to use for generating signal (try 5)
 LED_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
 #LED_STRIP   = ws.SK6812_STRIP_GBRW
-LED_STRIP   = config['LED_STRIP']
+LED_STRIP   = ws.WS2811_STRIP_GRB
 
 
 #LED strip 2 Configuration
@@ -148,9 +148,9 @@ def centre_fade(strip,r,g,b,wait_ms=5):
                 break
 
 def centre_static(strip,r,g,b, ratio=150):
-    for i in range (LED_COUNT/2):
-        strip.setPixelColor((LED_COUNT/2)+i,colour_floor(r,g,b,i,ratio))
-        strip.setPixelColor((LED_COUNT/2)-i,colour_floor(r,g,b,i,ratio))
+    for i in range ((LED_COUNT/2)+1):
+        strip.setPixelColor((LED_COUNT/2)+i,colour_floor(g,r,b,i,ratio))
+        strip.setPixelColor((LED_COUNT/2)-i,colour_floor(g,r,b,i,ratio))
         strip.show()
 
 def not_zero(a,b,c):
@@ -187,6 +187,8 @@ def random_change(strip,web_param,wait_ms=5):
         new_colour = GREEN
     elif web_param == 'run':
         new_colour = RUN_BLUE
+    elif web_param == 'wash':
+        new_colour = Color(config['CWRED'],config['CWGREEN'],config['CWBLUE'])
     else:
         new_colour = Color(2,0,0)
 

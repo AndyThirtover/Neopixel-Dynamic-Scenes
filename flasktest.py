@@ -13,6 +13,12 @@ app = Flask(__name__)
 def do_config(formargs):
     global config
     config_change = False
+    for key, value in formargs.iteritems():
+        if 'submit' in key:
+            pass
+        else: 
+            config[key] = int(value)
+
     if formargs.has_key('LED_COUNT'):
         config['LED_COUNT'] = int(formargs['LED_COUNT'])
         config_change = True
@@ -64,8 +70,9 @@ def neo_queue(job, parameter=None):
     elif job == 'neo_off2':
         neoOff(strip2,strip2_event)
     elif job == 'centre_fade':
+        global config
         strip1_event.clear()
-        centre_static(strip1,128,254,64)
+        centre_static(strip1,config['CWRED'],config['CWGREEN'],config['CWBLUE'],config['CWRATIO'])
     elif job == 'centre_fade2':
         strip1_event.clear()
         centre_static(strip1,128,128,254)
