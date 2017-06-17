@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from flask import request
 import threading
 import logging
 import time
@@ -9,16 +10,43 @@ from neojobs import *
 
 app = Flask(__name__)
 
+def do_config(formargs):
+    global config
+    config_change = False
+    if formargs.has_key('LED_COUNT'):
+        config['LED_COUNT'] = int(formargs['LED_COUNT'])
+        config_change = True
+    if formargs.has_key('MAX'):
+        config['MAX'] = int(formargs['MAX'])
+        global MAX
+        MAX = int(formargs['MAX'])
+        config_change = True
+
+    if config_change:
+        write_config(config)
+
+
+
 @app.route('/')
 def hello_world():
     all_threads = threading.enumerate()
     print (str(all_threads))
     return render_template('index.html', name='No Operation')
 
+@app.route('/config')
+def show_config():
+    do_config(request.args)
+    return render_template('config.html', name='No Operation')
+
 @app.route('/json_data')
 def json_data():
     global thread_data
     return jsonify(**thread_data)
+
+@app.route('/json_config')
+def json_config():
+    global config
+    return jsonify(**config)
 
 @app.route('/meter/<stripnumber>/<value>')
 @app.route('/meter/<stripnumber>/<value>/<start>/<end>')
@@ -56,9 +84,20 @@ def neo_queue(job, parameter=None):
 
     elif job == 'alarm':
         neoOff(strip1,strip1_event)
+
+        if parameter == 'check':
+            bgcolour = Color(4,4,0)
+            fgcolour = Color(0,128,0)
+            timing = 500
+        else:
+            bgcolour = Color(8,0,0)
+            fgcolour = Color(255,0,0)
+            timing = 50
+
         alarm_thread = threading.Thread(name='Alarm',
                                         target=alarm,
-                                        args=(strip1,strip1_event,Color(255,0,0),Color(8,0,0)))
+                                        args=(strip1,strip1_event,fgcolour,bgcolour,timing))
+
         alarm_thread.start()
 
     elif job == 'fade_out':

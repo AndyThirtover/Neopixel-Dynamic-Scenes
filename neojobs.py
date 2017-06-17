@@ -5,16 +5,34 @@ import time
 from neopixel import *
 from meter import *
 import random
+import yaml
 
+config = {}
+with open ('neopixels.yaml', 'r') as cfgfile:
+    config = yaml.load(cfgfile)
+
+if not config.has_key('LED_COUNT'):
+    config['LED_COUNT'] = 18
+if not config.has_key('LED_PIN'):
+    config['LED_PIN'] = 18
+if not config.has_key('LED_STRIP'):
+    config['LED_STRIP'] = ws.WS2811_STRIP_GRB
+if not config.has_key('MAX'):
+    config['MAX'] = 127
+
+def write_config(config):
+    rfile = open('neopixels.yaml','w')
+    rfile.write(yaml.dump(config))
+    rfile.close()
 
 # LED strip 1 configuration:
-LED_COUNT   = 18      # Number of LED pixels.
-LED_PIN     = 18      # GPIO pin connected to the pixels (must support PWM!).
+LED_COUNT   = config['LED_COUNT']      # Number of LED pixels.
+LED_PIN     = config['LED_PIN']      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA     = 5       # DMA channel to use for generating signal (try 5)
 LED_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
 #LED_STRIP   = ws.SK6812_STRIP_GBRW
-LED_STRIP   = ws.WS2811_STRIP_GRB
+LED_STRIP   = config['LED_STRIP']
 
 
 #LED strip 2 Configuration
@@ -26,7 +44,7 @@ LED2_DMA     = 6       # DMA channel to use for generating signal (try 5)
 LED2_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
 LED2_STRIP   = ws.WS2811_STRIP_GRB
 
-MAX = 127
+MAX = config['MAX']
 
 RED = Color(128,0,0)
 AMBER = Color(128,40,0)

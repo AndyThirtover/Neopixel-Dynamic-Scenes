@@ -11,3 +11,6 @@ with open('configs.yaml','r') as rfile:
 
 for section in cfg:
     print(section)
+
+if cfg.has_key('guff'):
+    print("Guff Found")

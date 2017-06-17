@@ -36,7 +36,8 @@
 		<td class='button' onclick="window.location.href='/queue/random_change/green'"> RANDOM Green </td>
 	</tr>
 	<tr>
-		<td class='button' onclick="window.location.href='/queue/random_change/run'"> RUN </td>
+		<td class='button' onclick="window.location.href='/queue/alarm/check'"> ENGINE CHECK </td>
+		<td class='button' onclick="window.location.href='/queue/random_change/run'"> ENGINE RUN </td>
 	</tr>
 	<tr>
 		<th colspan="4"> STRIP 2 Functions </th>
@@ -78,6 +79,7 @@
 
 
 <button id="button">Clickage</button>
+<button onclick="window.location.href='/config'" >Config</button>
 
 <table>
 	<tr>
@@ -88,6 +90,18 @@
 		<td id='count'> </td>
 		<td id='max_brightness'> </td>
 	</tr>
+
+	<tr>
+		<th>LED COUNT</th>
+		<th>LED PIN</th>
+		<th>STRIP TYPE</th>
+	</tr>
+	<tr>
+		<td id='LED_COUNT'> </td>
+		<td id='LED_PIN'> </td>
+		<td id='LED_STRIP'> </td>
+	</tr>
+
 </table>
 
 <script>
@@ -98,6 +112,9 @@ $("button").click(function(){
         });
     });
 });
+</script>
+
+
 </script>
 </body>
 </html>

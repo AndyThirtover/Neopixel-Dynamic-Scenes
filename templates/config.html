@@ -7,39 +7,49 @@
 
 <body>
 
-
-<button id="button">Config</button>
-
-<table>
-	<tr>
-		<th>LED COUNT</th>
-		<th>LED PIN</th>
-		<th>STRIP TYPE</th>
-	</tr>
-	<tr>
-		<td id='LED_COUNT'> </td>
-		<td id='LED_PIN'> </td>
-		<td id='LED_STRIP'> </td>
-	</tr>
-
-</table>
-
 <script>
-$("button").click(function(){
-    $.getJSON("/json_config", function(result){
+$.getJSON("/json_config", function(result){
         $.each(result, function(key, field){
-        	$('#'+key).text(field) ;
+            $('#'+key).val(field) ;
         });
     });
-});
 </script>
 
+
+<h1>CONFIGURATION</h1>
+
 <form>
-    LED COUNT
-    <input type='text' name='LED_COUNT' />
-    <input type='submit' name='submit' />
+    <table>
+        <tr>
+            <td id='iname'>LED COUNT</td>
+            <td><input id='LED_COUNT' type='number' name='LED_COUNT' /></td>
+        </tr>
+        <tr>
+            <td id='iname'>LED PIN</td>
+            <td><input id='LED_PIN' type='number' name='LED_PIN' /></td>
+        </tr>
+        <tr>
+            <td id='iname'>LED STRIP TYPE</td>
+            <td>
+                <select>
+                    <option value="WS2811_STRIP_GRB">WS2811_STRIP_GRB </option>
+                    <option value="WS6411_STRIP_GRB">WS6411_STRIP_GRB </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td id='iname'>Max Brightness</td>
+            <td><input id='MAX' type='number' name='MAX' /></td>
+        </tr>
+
+        <tr>
+            <td id='iname'>COMPLETE</td>
+            <td><input type='submit' name='submit' /></td>
+        </tr>
+    </table>
 </form>
 
+<button onclick="window.location.href='/'" >HOME</button>
 
 </body>
 </html>
