@@ -40,6 +40,10 @@ def neo_queue(job, parameter=None):
         global config
         strip1_event.clear()
         centre_static(strip1,config['CWRED'],config['CWGREEN'],config['CWBLUE'],config['CWRATIO'])
+    elif job == 'centre_fadew2':
+        global config
+        strip1_event.clear()
+        centre_static(strip1,config['CWRED2'],config['CWGREEN2'],config['CWBLUE2'],config['CWRATIO2'])
     elif job == 'centre_fade2':
         strip1_event.clear()
         centre_static(strip1,128,128,254)
@@ -49,6 +53,10 @@ def neo_queue(job, parameter=None):
     elif 'quarter' in job:
         neoOff(strip1,strip1_event)
         quarter(strip1,parameter,Color(MAX,0,0))
+    elif 'blend' in job:
+        blend_to_end(strip1,
+            Color(config['CWRED'],config['CWGREEN'],config['CWBLUE']),
+            Color(config['CWRED2'],config['CWGREEN2'],config['CWBLUE2']))
     elif job == 'rotate':
         neoOff(strip1,strip1_event)
         rotate_thread = threading.Thread(name='Rotate',

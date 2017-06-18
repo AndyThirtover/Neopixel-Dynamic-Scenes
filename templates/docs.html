@@ -32,20 +32,6 @@
       </div>
     </div>
     <div id="site_content">
-      <div class="sidebar">
-        <!-- insert your sidebar items here -->
-        <h3>Information</h3>
-        <h4>Version 2.1 Released</h4>
-        <h5>June 16th, 2017</h5>
-        <p>Version 2.1 adds YAML configuration storage, URL commands and a Web configurator.</a></p>
-        <p></p>
-    
-        <h3>Source Code</h3>
-        <ul>
-          <li><a href="https://github.com/AndyThirtover/Neopixel-Dynamic-Scenes">GitHub Project</a></li>
-        </ul>
-      </div>
-      <div id="content">
       <table>
         <tr>
           <th>URL Called</th>
@@ -53,14 +39,30 @@
         </tr>
         <tr>
           <td> /command/neo_off </td>
-          <td> All NeoPixels to OFF, all threads cancelled.  Can have issues when too many threads are running </td>
+          <td> All NeoPixels to OFF, all threads cancelled.  Can have issues when too many threads are running.</td>
         </tr>
         <tr>
-          <td> /command/centre_fade </td>
-          <td> Builds the fade to the colours defined in configuration </td>
+          <td> /command/centre_fade/wash </td>
+          <td> Builds the fade to the colours defined in configuration.</td>
         </tr>
+        <tr>
+          <td> /command/random_change/wash </td>
+          <td> Uses a random patern to bring all Pixels to the wash colour defined in the configuration. </td>
+        </tr>
+        <tr>
+          <td> /command/random_change/red[green,amber] </td>
+          <td> Uses a random patern to bring all Pixels to Red, Green or Amber. </td>
+        </tr>
+        <tr>
+          <td> /command/rotate </td>
+          <td> Rotates all Pixels through R,G,B in a chain, can be resource intensive with chains of more than 150 Pixels. </td>
+        </tr>
+        <tr>
+          <td> /command/blend </td>
+          <td> Creates a Blend from Wash 1 on the left to Wash 2 on the right.</td>
+        </tr>
+
       </table>
-      </div>
     </div>
     <div id="footer">
       Copyright &copy; WbAV Productions | <a href="http://wbavproductions.co.uk">WbAV Productions</a> 

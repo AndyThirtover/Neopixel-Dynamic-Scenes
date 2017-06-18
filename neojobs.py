@@ -153,6 +153,26 @@ def centre_static(strip,r,g,b, ratio=150):
         strip.setPixelColor((LED_COUNT/2)-i,colour_floor(g,r,b,i,ratio))
         strip.show()
 
+def blend_pixel_value(i,left,right):
+    return int((left*(LED_COUNT-i))/LED_COUNT) + int(right*i/LED_COUNT)
+    #print("BV: {0}, LEFT:{1}, RIGHT{2}, INDEX{3}".format(bv,left,right,i))
+    #return bv
+
+def blend_to_end(strip,left_colour, right_colour):
+    rl = left_colour >> 16 & 0xff 
+    gl = left_colour >> 8 & 0xff
+    bl = left_colour >> 0 & 0xff
+    rr = right_colour >> 16 & 0xff
+    gr = right_colour >> 8 & 0xff
+    br = right_colour >> 0 & 0xff
+    for i in range(LED_COUNT):
+        strip.setPixelColor(i,Color(
+                blend_pixel_value(i,rl,rr),
+                blend_pixel_value(i,gl,gr),
+                blend_pixel_value(i,bl,br))
+            )
+        strip.show()
+
 def not_zero(a,b,c):
     if (a-1) > 0 or (b-1) > 0 or (c-1) > 0:
         return True

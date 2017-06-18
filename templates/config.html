@@ -61,6 +61,10 @@ $.getJSON("/json_config", function(result){
 <form>
     <table>
         <tr>
+            <th>Value</th>
+            <th>Setting [Restart Needed]</th>
+        </tr>
+        <tr>
             <td id='iname'>LED COUNT</td>
             <td><input id='LED_COUNT' type='number' name='LED_COUNT' /></td>
         </tr>
@@ -73,13 +77,17 @@ $.getJSON("/json_config", function(result){
             <td>
                 <select>
                     <option value="528384">WS2811_STRIP_GRB </option>
-                    <option value="528384">WS6411_STRIP_GRB </option>
+                    <option value="403177488">SK6812_STRIP_GBRW </option>
                 </select>
             </td>
         </tr>
         <tr>
             <td id='iname'>Max Brightness</td>
             <td><input id='MAX' type='number' name='MAX' /></td>
+        </tr>
+        <tr>
+            <th>Wash 1 </th>
+            <th>Settings</th>
         </tr>
         <tr>
             <td id='iname'>Colour Wash Red</td>
@@ -97,6 +105,26 @@ $.getJSON("/json_config", function(result){
             <td id='iname'>Colour Wash Ratio</td>
             <td><input id='CWRATIO' type='number' name='CWRATIO' /></td>
         </tr>
+        <tr>
+            <th>Wash 2 </th>
+            <th>Settings</th>
+        </tr>
+        <tr>
+            <td id='iname'>Colour Wash Red</td>
+            <td><input id='CWRED2' type='number' name='CWRED2' /></td>
+        </tr>
+        <tr>
+            <td id='iname'>Colour Wash Green</td>
+            <td><input id='CWGREEN2' type='number' name='CWGREEN2' /></td>
+        </tr>
+        <tr>
+            <td id='iname'>Colour Wash Blue</td>
+            <td><input id='CWBLUE2' type='number' name='CWBLUE2' /></td>
+        </tr>
+        <tr>
+            <td id='iname'>Colour Wash Ratio</td>
+            <td><input id='CWRATIO2' type='number' name='CWRATIO2' /></td>
+        </tr>
 
         <tr>
             <td id='iname'>COMPLETE</td>
@@ -104,6 +132,9 @@ $.getJSON("/json_config", function(result){
         </tr>
     </table>
 </form>
+
+    <p>Any change of <em>LED Parameters</em> will require a program restart</p>
+
       </div>
 
     </div>
