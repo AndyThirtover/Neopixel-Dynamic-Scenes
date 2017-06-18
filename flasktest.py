@@ -57,6 +57,8 @@ def neo_queue(job, parameter=None):
         blend_to_end(strip1,
             Color(config['CWRED'],config['CWGREEN'],config['CWBLUE']),
             Color(config['CWRED2'],config['CWGREEN2'],config['CWBLUE2']))
+    elif 'random_pastel' in job:
+        random_pastel(strip1)
     elif job == 'rotate':
         neoOff(strip1,strip1_event)
         rotate_thread = threading.Thread(name='Rotate',
@@ -158,5 +160,8 @@ def command_queue(job="NoJob", parameter=None):
 def show_docs():
     return render_template('docs.html', name='Show Docs')
 
+@app.route('/contact')
+def show_contact():
+    return render_template('contact.html', name='Show Contact Page')
 
 app.run(host='0.0.0.0', debug=True)

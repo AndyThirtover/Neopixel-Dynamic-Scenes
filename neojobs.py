@@ -217,3 +217,14 @@ def random_change(strip,web_param,wait_ms=5):
         strip.setPixelColor(p,new_colour)
         strip.show()
         time.sleep(wait_ms/1000.0)
+
+def random_pastel(strip,wait_ms=5):
+    strip_seq = []
+    for i in range(strip.numPixels()):
+        strip_seq.append(i)
+    random.shuffle(strip_seq)
+    for p in strip_seq:
+        strip.setPixelColor(p,Color(random.randint(16,192),random.randint(16,140),random.randint(0,32)))
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
