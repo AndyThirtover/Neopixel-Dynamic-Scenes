@@ -1,12 +1,52 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
-<link rel="stylesheet" type="text/css" href="/static/base.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<title>NeoPixels Configuration Page</title>
+<head>
+  <title>NeoPixel Driver</title>
+  <meta name="description" content="Neo Pixel Scene Driver" />
+  <meta name="keywords" content="Neopixels" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="/static/style.css" title="style" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
 
 <body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="index.html">NeoPixel<span class="logo_colour">Driver</span></a></h1>
+          <h2>Simple Web Driven NeoPixel Driver</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li class="selected"><a href="/">Home</a></li>
+          <li><a href="/config">Configuration</a></li>
+          <li><a href="/command">Command Interface</a></li>
+          <li><a href="/docs">Documentation</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="site_content">
+      <div class="sidebar">
+        <!-- insert your sidebar items here -->
+        <h3>Information</h3>
+        <h4>Version 2.1 Released</h4>
+        <h5>June 16th, 2017</h5>
+        <p>Version 2.1 adds YAML configuration storage, URL commands and a Web configurator.</a></p>
+        <p></p>
+    
+        <h3>Source Code</h3>
+        <ul>
+          <li><a href="https://github.com/AndyThirtover/Neopixel-Dynamic-Scenes">GitHub Project</a></li>
+        </ul>
+      </div>
 
+      <div id="content">
 <script>
 $.getJSON("/json_config", function(result){
         $.each(result, function(key, field){
@@ -64,8 +104,12 @@ $.getJSON("/json_config", function(result){
         </tr>
     </table>
 </form>
+      </div>
 
-<button onclick="window.location.href='/'" >HOME</button>
-
+    </div>
+    <div id="footer">
+      Copyright &copy; WbAV Productions | <a href="http://wbavproductions.co.uk">WbAV Productions</a> 
+    </div>
+  </div>
 </body>
 </html>

@@ -1,120 +1,115 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
-<link rel="stylesheet" type="text/css" href="/static/base.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<title>NeoPixels Scene Setting</title>
+<head>
+  <title>NeoPixel Driver</title>
+  <meta name="description" content="Neo Pixel Scene Driver" />
+  <meta name="keywords" content="Neopixels" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="/static/style.css" title="style" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
 
 <body>
-
-<table>
-	<tr>
-		<th colspan='4'> SCENE CONTROL</th>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/queue/neo_off'"> OFF RGBW </td>
-		<td class='button' onclick="window.location.href='/queue/rotate'"> ROTATE </td>
-		<td class='button' onclick="window.location.href='/queue/alarm'"> ALARM </td>
-		<td class='button' onclick="window.location.href='/'"> INDEX </td>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/queue/quarter/1'"> QUARTER1 </td>
-		<td class='button' onclick="window.location.href='/queue/quarter/2'"> QUARTER2 </td>
-		<td class='button' onclick="window.location.href='/queue/quarter/3'"> QUARTER3 </td>
-		<td class='button' onclick="window.location.href='/queue/quarter/4'"> QUARTER4 </td>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/queue/centre_fade'"> CENTRE 1</td>
-		<td class='button' onclick="window.location.href='/queue/centre_fade2'"> CENTRE 2</td>
-		<td class='button' onclick="window.location.href='/queue/centre_fade3'"> CENTRE 3</td>
-		<td class='button' onclick="window.location.href='/queue/fade_out'"> FADE OUT </td>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/queue/random_change/wash'"> RANDOM Wash </td>
-		<td class='button' onclick="window.location.href='/queue/random_change/red'"> RANDOM Red </td>
-		<td class='button' onclick="window.location.href='/queue/random_change/amber'"> RANDOM Amber </td>
-		<td class='button' onclick="window.location.href='/queue/random_change/green'"> RANDOM Green </td>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/queue/alarm/check'"> ENGINE CHECK </td>
-		<td class='button' onclick="window.location.href='/queue/random_change/run'"> ENGINE RUN </td>
-	</tr>
-	<tr>
-		<th colspan="4"> STRIP 2 Functions </th>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/queue/neo_off2'"> OFF RGB</td>
-		<td class='button' onclick="window.location.href='/queue/meter'"> METER 1 </td>
-		<td class='button' onclick="window.location.href='/queue/meter2'"> METER 2 </td>
-	</tr>
-	<tr>
-		<th colspan="4"> STRIP 2 Meter </th>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/meter/1/0'"> METER 2 - 0 </td>
-		<td class='button' onclick="window.location.href='/meter/1/1'"> METER 2 - 1 </td>
-		<td class='button' onclick="window.location.href='/meter/1/4'"> METER 2 - 4 </td>
-		<td class='button' onclick="window.location.href='/meter/1/8'"> METER 2 - 8 </td>
-	</tr>
-	<tr>
-		<td class='button' onclick="window.location.href='/meter/1/0/12/24'"> METER 3 - 0 </td>
-		<td class='button' onclick="window.location.href='/meter/1/1/12/24'"> METER 3 - 1 </td>
-		<td class='button' onclick="window.location.href='/meter/1/4/12/24'"> METER 3 - 4 </td>
-		<td class='button' onclick="window.location.href='/meter/1/8/12/24'"> METER 3 - 8 </td>
-	</tr>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="index.html">NeoPixel<span class="logo_colour">Driver</span></a></h1>
+          <h2>Simple Web Driven NeoPixel Driver</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li class="selected"><a href="/">Home</a></li>
+          <li><a href="/config">Configuration</a></li>
+          <li><a href="/command">Command Interface</a></li>
+          <li><a href="/docs">Documentation</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="site_content">
+      <div class="sidebar">
+        <!-- insert your sidebar items here -->
+        <h3>Information</h3>
+        <h4>Version 2.1 Released</h4>
+        <h5>June 16th, 2017</h5>
+        <p>Version 2.1 adds YAML configuration storage, URL commands and a Web configurator.</a></p>
+        <p></p>
+    
+        <h3>Source Code</h3>
+        <ul>
+          <li><a href="https://github.com/AndyThirtover/Neopixel-Dynamic-Scenes">GitHub Project</a></li>
+        </ul>
+      </div>
+      <div id="content">
+        <table>
+  <tr>
+    <th colspan='4'> SCENE CONTROL</th>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/queue/neo_off'"> OFF RGBW </td>
+    <td class='button' onclick="window.location.href='/queue/rotate'"> ROTATE </td>
+    <td class='button' onclick="window.location.href='/queue/alarm'"> ALARM </td>
+    <td class='button' onclick="window.location.href='/'"> INDEX </td>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/queue/quarter/1'"> QUARTER1 </td>
+    <td class='button' onclick="window.location.href='/queue/quarter/2'"> QUARTER2 </td>
+    <td class='button' onclick="window.location.href='/queue/quarter/3'"> QUARTER3 </td>
+    <td class='button' onclick="window.location.href='/queue/quarter/4'"> QUARTER4 </td>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/queue/centre_fade'"> CENTRE 1</td>
+    <td class='button' onclick="window.location.href='/queue/centre_fade2'"> CENTRE 2</td>
+    <td class='button' onclick="window.location.href='/queue/centre_fade3'"> CENTRE 3</td>
+    <td class='button' onclick="window.location.href='/queue/fade_out'"> FADE OUT </td>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/queue/random_change/wash'"> RANDOM Wash </td>
+    <td class='button' onclick="window.location.href='/queue/random_change/red'"> RANDOM Red </td>
+    <td class='button' onclick="window.location.href='/queue/random_change/amber'"> RANDOM Amber </td>
+    <td class='button' onclick="window.location.href='/queue/random_change/green'"> RANDOM Green </td>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/queue/alarm/check'"> ENGINE CHECK </td>
+    <td class='button' onclick="window.location.href='/queue/random_change/run'"> ENGINE RUN </td>
+  </tr>
+  <tr>
+    <th colspan="4"> STRIP 2 Functions </th>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/queue/neo_off2'"> OFF RGB</td>
+    <td class='button' onclick="window.location.href='/queue/meter'"> METER 1 </td>
+    <td class='button' onclick="window.location.href='/queue/meter2'"> METER 2 </td>
+  </tr>
+  <tr>
+    <th colspan="4"> STRIP 2 Meter </th>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/meter/1/0'"> METER 2 - 0 </td>
+    <td class='button' onclick="window.location.href='/meter/1/1'"> METER 2 - 1 </td>
+    <td class='button' onclick="window.location.href='/meter/1/4'"> METER 2 - 4 </td>
+    <td class='button' onclick="window.location.href='/meter/1/8'"> METER 2 - 8 </td>
+  </tr>
+  <tr>
+    <td class='button' onclick="window.location.href='/meter/1/0/12/24'"> METER 3 - 0 </td>
+    <td class='button' onclick="window.location.href='/meter/1/1/12/24'"> METER 3 - 1 </td>
+    <td class='button' onclick="window.location.href='/meter/1/4/12/24'"> METER 3 - 4 </td>
+    <td class='button' onclick="window.location.href='/meter/1/8/12/24'"> METER 3 - 8 </td>
+  </tr>
 
 
 </table>
 
-
-{% if name %}
-  <h1>Last Task {{ name }}</h1>
-{% else %}
-  <h1>No task defined</h1>
-{% endif %}
-
-{% if count %}
-  <h2> Wipe runs {{ count }} </h2>
-{% endif %}
-
-
-<button id="button">Clickage</button>
-<button onclick="window.location.href='/config'" >Config</button>
-
-<table>
-	<tr>
-		<th>Rotate Count</th>
-		<th>Max Brightness</th>
-	</tr>
-	<tr>
-		<td id='count'> </td>
-		<td id='max_brightness'> </td>
-	</tr>
-
-	<tr>
-		<th>LED COUNT</th>
-		<th>LED PIN</th>
-		<th>STRIP TYPE</th>
-	</tr>
-	<tr>
-		<td id='LED_COUNT'> </td>
-		<td id='LED_PIN'> </td>
-		<td id='LED_STRIP'> </td>
-	</tr>
-
-</table>
-
-<script>
-$("button").click(function(){
-    $.getJSON("/json_data", function(result){
-        $.each(result, function(key, field){
-        	$('#'+key).text(field) ;
-        });
-    });
-});
-</script>
-
-
-</script>
+      </div>
+    </div>
+    <div id="footer">
+      Copyright &copy; WbAV Productions | <a href="http://wbavproductions.co.uk">WbAV Productions</a> 
+    </div>
+  </div>
 </body>
 </html>

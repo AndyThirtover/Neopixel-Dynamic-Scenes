@@ -31,39 +31,6 @@ def do_config(formargs):
     if config_change:
         write_config(config)
 
-
-
-@app.route('/')
-def hello_world():
-    all_threads = threading.enumerate()
-    print (str(all_threads))
-    return render_template('index.html', name='No Operation')
-
-@app.route('/config')
-def show_config():
-    do_config(request.args)
-    return render_template('config.html', name='No Operation')
-
-@app.route('/json_data')
-def json_data():
-    global thread_data
-    return jsonify(**thread_data)
-
-@app.route('/json_config')
-def json_config():
-    global config
-    return jsonify(**config)
-
-@app.route('/meter/<stripnumber>/<value>')
-@app.route('/meter/<stripnumber>/<value>/<start>/<end>')
-def do_meter(stripnumber,value,start=0,end=12):
-    strips = [strip1,strip2]
-    value_meter(strips[int(stripnumber)],int(value),int(start),int(end),Color(255,0,0),Color(8,0,0))
-    return render_template('index.html', name='No Operation')
-
-
-@app.route('/queue/<job>')
-@app.route('/queue/<job>/<parameter>')
 def neo_queue(job, parameter=None):
     if job == 'neo_off':
         neoOff(strip1,strip1_event)
@@ -137,9 +104,51 @@ def neo_queue(job, parameter=None):
         random_change_thread.start()
 
 
+@app.route('/')
+def hello_world():
+    all_threads = threading.enumerate()
+    print (str(all_threads))
+    return render_template('index.html', name='No Operation')
+
+@app.route('/config')
+def show_config():
+    do_config(request.args)
+    return render_template('config.html', name='No Operation')
+
+@app.route('/json_data')
+def json_data():
+    global thread_data
+    return jsonify(**thread_data)
+
+@app.route('/json_config')
+def json_config():
+    global config
+    return jsonify(**config)
+
+@app.route('/meter/<stripnumber>/<value>')
+@app.route('/meter/<stripnumber>/<value>/<start>/<end>')
+def do_meter(stripnumber,value,start=0,end=12):
+    strips = [strip1,strip2]
+    value_meter(strips[int(stripnumber)],int(value),int(start),int(end),Color(255,0,0),Color(8,0,0))
+    return render_template('index.html', name='No Operation')
+
+
+@app.route('/queue/<job>')
+@app.route('/queue/<job>/<parameter>')
+def index_do(job, parameter=None):
+    neo_queue(job,parameter)
     return render_template('index.html', name='Job Queued:' + job)
 
+@app.route('/command')
+@app.route('/command/<job>')
+@app.route('/command/<job>/<parameter>')
+def command_queue(job="NoJob", parameter=None):
+    neo_queue(job,parameter)
+    return render_template('command.html', name='Job Queued:' + job)
 
+@app.route('/docs')
+def show_docs():
+    return render_template('docs.html', name='Show Docs')
 
 
 app.run(host='0.0.0.0', debug=True)
