@@ -7,32 +7,42 @@ from meter import *
 import random
 import yaml
 
+MAX = 0
 config = {}
-with open ('neopixels.yaml', 'r') as cfgfile:
-    config = yaml.load(cfgfile)
 
-if not config.has_key('LED_COUNT'):
-    config['LED_COUNT'] = 18
-if not config.has_key('LED_PIN'):
-    config['LED_PIN'] = 18
-if not config.has_key('LED_STRIP'):
-    config['LED_STRIP'] = ws.WS2811_STRIP_GRB
-if not config.has_key('MAX'):
-    config['MAX'] = 127
+
+def read_config(config):
+    with open ('neopixels.yaml', 'r') as cfgfile:
+        config = yaml.load(cfgfile)
+
+    if not config.has_key('LED_COUNT'):
+        config['LED_COUNT'] = 18
+    if not config.has_key('LED_PIN'):
+        config['LED_PIN'] = 18
+    if not config.has_key('LED_STRIP'):
+        config['LED_STRIP'] = ws.WS2811_STRIP_GRB
+    if not config.has_key('MAX'):
+        config['MAX'] = 127
+    return config
+
+config = read_config(config)
+MAX=config['MAX']
 
 def write_config(config):
     rfile = open('neopixels.yaml','w')
     rfile.write(yaml.dump(config))
     rfile.close()
 
-# LED strip 1 configuration:
-LED_COUNT   = config['LED_COUNT']      # Number of LED pixels.
-LED_PIN     = 18     # GPIO pin connected to the pixels (must support PWM!).
-LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA     = 5       # DMA channel to use for generating signal (try 5)
-LED_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
-#LED_STRIP   = ws.SK6812_STRIP_GBRW
-LED_STRIP   = ws.WS2811_STRIP_GRB
+def config_strip1(config):
+    # LED strip 1 configuration:
+    LED_COUNT   = config['LED_COUNT']      # Number of LED pixels.
+    LED_PIN     = 18     # GPIO pin connected to the pixels (must support PWM!).
+    LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
+    LED_DMA     = 5       # DMA channel to use for generating signal (try 5)
+    LED_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
+    #LED_STRIP   = ws.SK6812_STRIP_GBRW
+    LED_STRIP   = ws.WS2811_STRIP_GRB
+    return Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, 255, 0, LED_STRIP)
 
 
 #LED strip 2 Configuration
@@ -44,7 +54,6 @@ LED2_DMA     = 6       # DMA channel to use for generating signal (try 5)
 LED2_INVERT  = False   # True to invert the signal (when using NPN transistor level shift)
 LED2_STRIP   = ws.WS2811_STRIP_GRB
 
-MAX = config['MAX']
 
 RED = Color(128,0,0)
 AMBER = Color(128,40,0)
@@ -56,7 +65,7 @@ thread_data = {'count' : 0,
             }
 
 # Create NeoPixel object with appropriate configuration.
-strip1 = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, 255, 0, LED_STRIP)
+strip1=config_strip1(config)
 strip2 = Adafruit_NeoPixel(LED2_COUNT, LED2_PIN, LED2_FREQ_HZ, LED2_DMA, LED2_INVERT, 255, 1, LED2_STRIP)
 # Intialize the library (must be called once before other functions).
 strip1.begin()
@@ -148,13 +157,13 @@ def centre_fade(strip,r,g,b,wait_ms=5):
                 break
 
 def centre_static(strip,r,g,b, ratio=150):
-    for i in range ((LED_COUNT/2)+1):
-        strip.setPixelColor((LED_COUNT/2)+i,colour_floor(g,r,b,i,ratio))
-        strip.setPixelColor((LED_COUNT/2)-i,colour_floor(g,r,b,i,ratio))
+    for i in range ((strip.numPixels()/2)+1):
+        strip.setPixelColor((strip.numPixels()/2)+i,colour_floor(g,r,b,i,ratio))
+        strip.setPixelColor((strip.numPixels()/2)-i,colour_floor(g,r,b,i,ratio))
         strip.show()
 
-def blend_pixel_value(i,left,right):
-    return int((left*(LED_COUNT-i))/LED_COUNT) + int(right*i/LED_COUNT)
+def blend_pixel_value(strip,i,left,right):
+    return int((left*(strip.numPixels()-i))/strip.numPixels()) + int(right*i/strip.numPixels())
     #print("BV: {0}, LEFT:{1}, RIGHT{2}, INDEX{3}".format(bv,left,right,i))
     #return bv
 
@@ -165,11 +174,11 @@ def blend_to_end(strip,left_colour, right_colour):
     rr = right_colour >> 16 & 0xff
     gr = right_colour >> 8 & 0xff
     br = right_colour >> 0 & 0xff
-    for i in range(LED_COUNT):
+    for i in range(strip.numPixels()):
         strip.setPixelColor(i,Color(
-                blend_pixel_value(i,rl,rr),
-                blend_pixel_value(i,gl,gr),
-                blend_pixel_value(i,bl,br))
+                blend_pixel_value(strip,i,rl,rr),
+                blend_pixel_value(strip,i,gl,gr),
+                blend_pixel_value(strip,i,bl,br))
             )
         strip.show()
 
@@ -183,7 +192,7 @@ def fade_out(strip):
     run = True
     while run:
         run = False
-        for i in range(LED_COUNT):
+        for i in range(strip.numPixels()):
             current = strip.getPixelColor(i)
             r,g,b = int_to_rgb(current)
             strip.setPixelColor(i,Color(light_floor(r,1),light_floor(g,1),light_floor(b,1)))
@@ -227,4 +236,9 @@ def random_pastel(strip,wait_ms=5):
         strip.setPixelColor(p,Color(random.randint(16,192),random.randint(16,140),random.randint(0,32)))
         strip.show()
         time.sleep(wait_ms/1000.0)
+
+def twinkle(strip,event,wait_ms=5):
+    event.clear()
+    while not event.is_set():
+        random_pastel(strip,wait_ms)
 

@@ -8,6 +8,7 @@ import time
 import random
 from neojobs import *
 
+
 app = Flask(__name__)
 
 def do_config(formargs):
@@ -37,30 +38,31 @@ def neo_queue(job, parameter=None):
     elif job == 'neo_off2':
         neoOff(strip2,strip2_event)
     elif job == 'centre_fade':
-        global config
-        strip1_event.clear()
+        strip1_event.set()
         centre_static(strip1,config['CWRED'],config['CWGREEN'],config['CWBLUE'],config['CWRATIO'])
     elif job == 'centre_fadew2':
-        global config
-        strip1_event.clear()
+        strip1_event.set()
         centre_static(strip1,config['CWRED2'],config['CWGREEN2'],config['CWBLUE2'],config['CWRATIO2'])
     elif job == 'centre_fade2':
-        strip1_event.clear()
+        strip1_event.set()
         centre_static(strip1,128,128,254)
     elif job == 'centre_fade3':
-        strip1_event.clear()
+        strip1_event.set()
         centre_static(strip1,254,128,128)
     elif 'quarter' in job:
         neoOff(strip1,strip1_event)
         quarter(strip1,parameter,Color(MAX,0,0))
     elif 'blend' in job:
+        strip1_event.set()
         blend_to_end(strip1,
             Color(config['CWRED'],config['CWGREEN'],config['CWBLUE']),
             Color(config['CWRED2'],config['CWGREEN2'],config['CWBLUE2']))
     elif 'random_pastel' in job:
+        strip1_event.set()
         random_pastel(strip1)
     elif job == 'rotate':
-        neoOff(strip1,strip1_event)
+        #neoOff(strip1,strip1_event)
+        strip1_event.set()
         rotate_thread = threading.Thread(name='Rotate',
                                          target=rotate,
                                          args=(strip1,strip1_event,))
@@ -113,6 +115,16 @@ def neo_queue(job, parameter=None):
                                         args=(strip1,parameter,speed))
         random_change_thread.start()
 
+    elif 'twinkle' in job:
+        strip1_event.set()
+        speed = 5
+        if parameter:
+            speed = int(parameter)
+        twinkle_change_thread = threading.Thread(name='Twinkle',
+                                        target=twinkle,
+                                        args=(strip1,strip1_event,speed))
+        twinkle_change_thread.start()
+
 
 @app.route('/')
 def hello_world():
@@ -163,5 +175,6 @@ def show_docs():
 @app.route('/contact')
 def show_contact():
     return render_template('contact.html', name='Show Contact Page')
+
 
 app.run(host='0.0.0.0', debug=True)
