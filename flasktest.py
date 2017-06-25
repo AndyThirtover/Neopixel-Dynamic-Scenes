@@ -69,20 +69,19 @@ def neo_queue(job, parameter=None):
         rotate_thread.start()
 
     elif job == 'alarm':
-        neoOff(strip1,strip1_event)
-
-        if parameter == 'check':
-            bgcolour = Color(4,4,0)
-            fgcolour = Color(0,128,0)
-            timing = 500
+        print("Alarm Parameter: {0}".format(parameter))
+        if parameter == 'colour=green':
+            fgcolour = Color(0,255,0)
+            span = 10
+            timing = 200
         else:
-            bgcolour = Color(8,0,0)
             fgcolour = Color(255,0,0)
+            span = 4
             timing = 50
 
         alarm_thread = threading.Thread(name='Alarm',
                                         target=alarm,
-                                        args=(strip1,strip1_event,fgcolour,bgcolour,timing))
+                                        args=(strip1,strip1_event,fgcolour,span,timing))
 
         alarm_thread.start()
 
@@ -120,8 +119,13 @@ def neo_queue(job, parameter=None):
         speed = 5
         if parameter:
             speed = int(parameter)
-        twinkle_change_thread = threading.Thread(name='Twinkle',
+        if job == 'twinkle':
+            twinkle_change_thread = threading.Thread(name='Twinkle',
                                         target=twinkle,
+                                        args=(strip1,strip1_event,speed))
+        if job == 'twinkle_fade':
+            twinkle_change_thread = threading.Thread(name='Twinkle_Fade',
+                                        target=twinkle_fade,
                                         args=(strip1,strip1_event,speed))
         twinkle_change_thread.start()
 

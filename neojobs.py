@@ -109,7 +109,7 @@ def quarter(strip,segment,value):
         strip.setPixelColor(i,value)
         strip.show()
 
-def alarm(strip, event, highlight, background, wait_ms=50):
+def red_alarm(strip, event, highlight, background, wait_ms=50):
 	event.clear()
 	while not event.is_set():
 		for i in range(strip.numPixels()):
@@ -120,6 +120,33 @@ def alarm(strip, event, highlight, background, wait_ms=50):
 					strip.setPixelColor(j,background)
 				strip.show()
 		    	time.sleep(wait_ms/1000.0)
+
+
+def alarm_cycle(strip, event, highlight, span=3, wait_ms=5):
+    previous = []
+    for i in range(strip.numPixels()):
+        if not event.is_set():
+            this_Color = strip.getPixelColor(i)
+            previous.append({i:this_Color})
+            #strip.setPixelColor(i,highlight)
+            print("len {0}, span {1}, wait {2}".format(len(previous),span,wait_ms))
+            if len(previous) == span:
+                first_previous = previous.pop(0)
+                strip.setPixelColor(first_previous.keys()[0], first_previous.values()[0])
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+        else:
+            break
+    for item in previous:
+        if not event.is_set():
+            strip.setPixelColor(item.keys()[0],item.values()[0])
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+
+def alarm(strip, event, highlight, span=4, wait_ms=5):
+    event.clear()
+    while not event.is_set():
+        alarm_cycle(strip,event,highlight,span,wait_ms)
 
 
 def int_to_rgb(n):
@@ -161,6 +188,23 @@ def centre_static(strip,r,g,b, ratio=150):
         strip.setPixelColor((strip.numPixels()/2)+i,colour_floor(g,r,b,i,ratio))
         strip.setPixelColor((strip.numPixels()/2)-i,colour_floor(g,r,b,i,ratio))
         strip.show()
+
+def blend_int(c,t,step,steps):
+    return int(c*(steps-step)/steps) + int(t*step/steps)
+
+def blend_colour(current,target,step,steps):
+    rc = current >> 16 & 0xff 
+    gc = current >> 8 & 0xff
+    bc = current >> 0 & 0xff
+    rt = target >> 16 & 0xff
+    gt = target >> 8 & 0xff
+    bt = target >> 0 & 0xff
+    return Color(
+            blend_int(rc,rt,step,steps),
+            blend_int(gc,gt,step,steps),
+            blend_int(bc,bt,step,steps)
+        )
+
 
 def blend_pixel_value(strip,i,left,right):
     return int((left*(strip.numPixels()-i))/strip.numPixels()) + int(right*i/strip.numPixels())
@@ -237,8 +281,37 @@ def random_pastel(strip,wait_ms=5):
         strip.show()
         time.sleep(wait_ms/1000.0)
 
+
+
+def fade_one(strip,event,target_pixel,steps=8):
+    current_Color = strip.getPixelColor(target_pixel)
+    target_Color = Color(random.randint(16,192),random.randint(16,140),random.randint(0,32))
+    for i in range(0,steps):
+        if not event.is_set():
+            blend = blend_colour(current_Color,target_Color,i,steps)
+            strip.setPixelColor(target_pixel,blend)
+            strip.show() 
+        else:
+            break
+
 def twinkle(strip,event,wait_ms=5):
     event.clear()
     while not event.is_set():
         random_pastel(strip,wait_ms)
+
+def twinkle_fade(strip,event,wait_ms=5):
+    event.clear()
+    #print ("called with wait: {0}".format(wait_ms))
+    strip_seq = []
+    for i in range(strip.numPixels()):
+        strip_seq.append(i)
+    random.shuffle(strip_seq)
+
+    while not event.is_set():
+        for p in strip_seq:
+            if not event.is_set():
+                fade_one(strip1,event,p)
+                time.sleep(wait_ms/1000.0)
+            else:
+                break
 
