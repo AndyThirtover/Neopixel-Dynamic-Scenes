@@ -128,8 +128,8 @@ def alarm_cycle(strip, event, highlight, span=3, wait_ms=5):
         if not event.is_set():
             this_Color = strip.getPixelColor(i)
             previous.append({i:this_Color})
-            #strip.setPixelColor(i,highlight)
-            print("len {0}, span {1}, wait {2}".format(len(previous),span,wait_ms))
+            strip.setPixelColor(i,highlight)
+            #print("len {0}, span {1}, wait {2}".format(len(previous),span,wait_ms))
             if len(previous) == span:
                 first_previous = previous.pop(0)
                 strip.setPixelColor(first_previous.keys()[0], first_previous.values()[0])
