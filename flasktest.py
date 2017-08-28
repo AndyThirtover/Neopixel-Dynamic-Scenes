@@ -7,6 +7,7 @@ import logging
 import time
 import random
 from neojobs import *
+from buttons import *
 
 
 app = Flask(__name__)
@@ -180,5 +181,10 @@ def show_docs():
 def show_contact():
     return render_template('contact.html', name='Show Contact Page')
 
+# start the thread for buttons
+button_event = threading.Event()
+button_thread = threading.Thread(name="testing", target=read_button_task, args=(button_event,))
+button_thread.start()
 
 app.run(host='0.0.0.0', debug=True)
+button_event.set()
