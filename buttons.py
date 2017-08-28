@@ -1,28 +1,24 @@
 import threading
 import time
 import RPi.GPIO as GPIO
-from neojobs import *
+import urllib2
 
 
 debounce = 10
 button_0 = 5
 button_1 = 6
 sleep_time = 0.05
+keep_out = 1
 
 
-
-def off_action():
-    print("=== Calling the OFF ===")
-    neoOff(strip1,strip1_event)
 
 def action(button_number):
-    from flasktest import neo_queue
     if button_number == button_1:
         print ("BUTTON 1 Activated")
-        neo_queue('rotate')
+        urllib2.urlopen('http://127.0.0.1:5000/command/rotate')
     else:
-        print ("BUTTON 2 Activated")
-        off_action()
+        print ("BUTTON 0 Activated")
+        urllib2.urlopen('http://127.0.0.1:5000/command/neo_off')
     return button_number
 
 
@@ -42,9 +38,11 @@ def read_button_task(stop_event):
 
         if count_button_0 < 0:
             action(button_0)
+            time.sleep(keep_out)
             count_button_0 = debounce
         if count_button_1 < 0:
             action(button_1)
+            time.sleep(keep_out)
             count_button_1 = debounce
         #print("0 : {0}    1: {1}".format(count_button_0,count_button_1))
         time.sleep(sleep_time)
