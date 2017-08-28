@@ -8,9 +8,28 @@ import time
 import random
 from neojobs import *
 from buttons import *
+import atexit
+
+button_event = threading.Event()
+button_thread = threading.Thread(name="Button_Handler", target=read_button_task, args=(button_event,))
 
 
-app = Flask(__name__)
+def create_app():
+    flapp = Flask(__name__)
+
+    def interrupt():
+        global button_thread
+        button_thread.cancel()
+
+    def start_button():
+        global button_thread
+        button_thread.start()
+
+    start_button()
+    atexit.register(interrupt)
+    return flapp
+
+app = create_app()
 
 def do_config(formargs):
     global config
@@ -181,10 +200,4 @@ def show_docs():
 def show_contact():
     return render_template('contact.html', name='Show Contact Page')
 
-# start the thread for buttons
-button_event = threading.Event()
-button_thread = threading.Thread(name="testing", target=read_button_task, args=(button_event,))
-button_thread.start()
-
 app.run(host='0.0.0.0', debug=True)
-button_event.set()

@@ -10,11 +10,19 @@ button_1 = 6
 sleep_time = 0.05
 
 
+
+def off_action():
+    print("=== Calling the OFF ===")
+    neoOff(strip1,strip1_event)
+
 def action(button_number):
+    from flasktest import neo_queue
     if button_number == button_1:
         print ("BUTTON 1 Activated")
+        neo_queue('rotate')
     else:
         print ("BUTTON 2 Activated")
+        off_action()
     return button_number
 
 
