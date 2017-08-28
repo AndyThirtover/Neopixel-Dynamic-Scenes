@@ -1,2 +1,2 @@
 {CWBLUE: 0, CWBLUE2: 240, CWGREEN: 0, CWGREEN2: 0, CWRATIO: 162, CWRATIO2: 170, CWRED: 240,
-  CWRED2: 0, LED_COUNT: 150, LED_PIN: 18, LED_STRIP: 528384, MAX: 255, submit: !!python/unicode 'Submit'}
+  CWRED2: 0, LED_COUNT: 150, LED_PIN: 18, MAX: 255, submit: !!python/unicode 'Submit'}
