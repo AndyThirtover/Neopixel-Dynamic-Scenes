@@ -19,7 +19,7 @@ def create_app():
 
     def interrupt():
         global button_thread
-        button_thread.cancel()
+        button_thread.set()
 
     def start_button():
         global button_thread

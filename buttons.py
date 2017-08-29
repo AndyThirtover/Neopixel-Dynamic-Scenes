@@ -4,47 +4,40 @@ import RPi.GPIO as GPIO
 import urllib2
 
 
-debounce = 10
-button_0 = 5
-button_1 = 6
+# debounce is number of times that sleep_time need to have passed to consider the button pressed.
+# keep_out is the time before another button press can be processed.
+debounce = 4
 sleep_time = 0.05
-keep_out = 1
+keep_out = 0.5
+
+buttons = {
+            '5':{'url':'http://127.0.0.1:5000/command/neo_off', 'debounce':debounce},
+            '6':{'url':'http://127.0.0.1:5000/command/rotate', 'debounce':debounce}
+            }
 
 
-
-def action(button_number):
-    if button_number == button_1:
-        print ("BUTTON 1 Activated")
-        urllib2.urlopen('http://127.0.0.1:5000/command/rotate')
-    else:
-        print ("BUTTON 0 Activated")
-        urllib2.urlopen('http://127.0.0.1:5000/command/neo_off')
-    return button_number
-
+def action(button):
+    print ("BUTTON at Pin {0} Activated".format(button))
+    try:
+        urllib2.urlopen(buttons[button]['url'])
+    except:
+        print ("FAILED URL: {0}".format(buttons[button]['url']))
 
 
 def read_button_task(stop_event):
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(button_0, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(button_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    count_button_0 = debounce
-    count_button_1 = debounce
+    for button in buttons:
+        GPIO.setup(int(button), GPIO.IN, pull_up_down=GPIO.PUD_UP)
     while not stop_event.is_set():
         # Have buttons been pressed.
-        if not GPIO.input(button_0):
-            count_button_0 -= 1
-        if not GPIO.input(button_1):
-            count_button_1 -= 1
+        for button in buttons:
+            if not GPIO.input(int(button)):
+                buttons[button]['debounce'] -= 1
 
-        if count_button_0 < 0:
-            action(button_0)
-            time.sleep(keep_out)
-            count_button_0 = debounce
-        if count_button_1 < 0:
-            action(button_1)
-            time.sleep(keep_out)
-            count_button_1 = debounce
-        #print("0 : {0}    1: {1}".format(count_button_0,count_button_1))
+            if buttons[button]['debounce'] < 0:
+                action(button)
+                time.sleep(keep_out)
+                buttons[button]['debounce'] = debounce
         time.sleep(sleep_time)
     print("=== Stopping Button Thread ===")
 
@@ -52,6 +45,7 @@ def read_button_task(stop_event):
 
 if __name__ == "__main__":
     # Tests
+    print("URLs may fail during testing, it's the pin numbers that are important")
     running = threading.Event()
     test_thread = threading.Thread(name="testing", target=read_button_task, args=(running,))
     test_thread.start()
