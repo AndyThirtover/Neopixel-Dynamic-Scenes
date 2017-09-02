@@ -18,6 +18,7 @@ def create_app():
     flapp = Flask(__name__)
 
     def interrupt():
+        print ("Shutting down Button Thread")
         global button_thread
         button_thread.set()
 
@@ -33,7 +34,6 @@ app = create_app()
 
 def do_config(formargs):
     global config
-    config_change = False
     for key, value in formargs.iteritems():
         if 'submit' in key:
             pass
@@ -42,15 +42,12 @@ def do_config(formargs):
 
     if formargs.has_key('LED_COUNT'):
         config['LED_COUNT'] = int(formargs['LED_COUNT'])
-        config_change = True
     if formargs.has_key('MAX'):
         config['MAX'] = int(formargs['MAX'])
         global MAX
         MAX = int(formargs['MAX'])
-        config_change = True
 
-    if config_change:
-        write_config(config)
+    write_config(config)
 
 def neo_queue(job, parameter=None):
     if job == 'neo_off':
@@ -170,6 +167,11 @@ def json_data():
 def json_config():
     global config
     return jsonify(**config)
+
+@app.route('/button_config')
+def button_config():
+    global buttons
+    return jsonify(**buttons)
 
 @app.route('/meter/<stripnumber>/<value>')
 @app.route('/meter/<stripnumber>/<value>/<start>/<end>')

@@ -7,6 +7,7 @@ from meter import *
 import random
 import yaml
 
+
 MAX = 0
 config = {}
 

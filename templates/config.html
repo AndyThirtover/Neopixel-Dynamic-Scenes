@@ -135,6 +135,29 @@ $.getJSON("/json_config", function(result){
 
     <p>Any change of <em>LED Parameters</em> will require a program restart</p>
 
+<script>
+$.getJSON( "/button_config", function( data ) {
+  var items = [];
+  items.push("<tr><th>Pin</th><th>URL Called</th></tr>");
+  $.each( data, function( key, val ) {
+    items.push( "<tr>");
+    items.push( "<td id='" + key + "'>" + key + "</td>" );
+    items.push( "<td id='" + key + "'>" + val.url + "</td>" );
+    items.push( "</tr>");
+  });
+ 
+  $( "<table/>", {
+    "class": "bdefinitions",
+    html: items.join( "" )
+  }).appendTo( "#bconfig" );
+});
+</script>
+
+<h1>BUTTON CONFIGURATION</h1>
+<div id='bconfig'/>
+
+
+
       </div>
 
     </div>

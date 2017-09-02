@@ -2,6 +2,8 @@ import threading
 import time
 import RPi.GPIO as GPIO
 import urllib2
+import yaml
+import os.path
 
 
 # debounce is number of times that sleep_time need to have passed to consider the button pressed.
@@ -10,10 +12,43 @@ debounce = 4
 sleep_time = 0.05
 keep_out = 0.5
 
-buttons = {
-            '5':{'url':'http://127.0.0.1:5000/command/neo_off', 'debounce':debounce},
-            '6':{'url':'http://127.0.0.1:5000/command/rotate', 'debounce':debounce}
-            }
+buttons = {}
+
+def read_button_config(filename):
+    global buttons
+    if os.path.isfile(filename):
+        with open (filename, 'r') as cfgfile:
+            buttons = yaml.load(cfgfile)
+    else:
+        if not buttons.has_key('5'):
+            buttons['5'] = {'url':'http://127.0.0.1:5000/command/neo_off', 'debounce':debounce}
+        if not buttons.has_key('6'):
+            buttons['6'] = {'url':'http://127.0.0.1:5000/command/rotate', 'debounce':debounce}
+        write_button_config(filename)
+
+read_button_config('buttons.yaml')
+
+def write_button_config(filename):
+    rfile = open(filename,'w')
+    rfile.write(yaml.dump(buttons))
+    rfile.close()
+
+
+def do_button_config(config):
+    print ("BUTTON CONFIG CALLED")
+    global buttons
+    if config.has_key('buttons'):
+        for button in config['buttons']:
+            buttons['button'] = config['buttons'][button]
+    else:
+        # set a default
+        buttons = {
+                    '5':{'url':'http://127.0.0.1:5000/command/neo_off', 'debounce':debounce},
+                    '6':{'url':'http://127.0.0.1:5000/command/rotate', 'debounce':debounce}
+                    }
+        config['buttons'] = buttons        
+    return config
+
 
 
 def action(button):
@@ -25,6 +60,7 @@ def action(button):
 
 
 def read_button_task(stop_event):
+    print("Button Config at start: {0}".format(buttons))
     GPIO.setmode(GPIO.BCM)
     for button in buttons:
         GPIO.setup(int(button), GPIO.IN, pull_up_down=GPIO.PUD_UP)
