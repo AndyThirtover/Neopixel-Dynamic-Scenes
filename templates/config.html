@@ -128,7 +128,7 @@ $.getJSON("/json_config", function(result){
 
         <tr>
             <td id='iname'>COMPLETE</td>
-            <td><input type='submit' name='submit' /></td>
+            <td><input type='submit' name='submit' value='SYSTEM' /></td>
         </tr>
     </table>
 </form>
@@ -142,9 +142,10 @@ $.getJSON( "/button_config", function( data ) {
   $.each( data, function( key, val ) {
     items.push( "<tr>");
     items.push( "<td id='" + key + "'>" + key + "</td>" );
-    items.push( "<td id='" + key + "'>" + val.url + "</td>" );
+    items.push( "<td><input type='text' name='" + key + "' value='" + val.url + "'</input></td>" );
     items.push( "</tr>");
   });
+  items.push("<tr><td>COMPLETE</td><td><input type='submit' name='submit' value='BUTTONS'/></td></tr>");
  
   $( "<table/>", {
     "class": "bdefinitions",
@@ -154,8 +155,8 @@ $.getJSON( "/button_config", function( data ) {
 </script>
 
 <h1>BUTTON CONFIGURATION</h1>
-<div id='bconfig'/>
-
+<form id='bconfig'>
+</form
 
 
       </div>

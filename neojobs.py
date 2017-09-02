@@ -34,6 +34,23 @@ def write_config(config):
     rfile.write(yaml.dump(config))
     rfile.close()
 
+def process_neo_config(formargs):
+    for key, value in formargs.iteritems():
+        if 'submit' in key:
+            pass
+        else: 
+            config[key] = int(value)
+
+    if formargs.has_key('LED_COUNT'):
+        config['LED_COUNT'] = int(formargs['LED_COUNT'])
+    if formargs.has_key('MAX'):
+        config['MAX'] = int(formargs['MAX'])
+        global MAX
+        MAX = int(formargs['MAX'])
+
+    write_config(config)
+
+
 def config_strip1(config):
     # LED strip 1 configuration:
     LED_COUNT   = config['LED_COUNT']      # Number of LED pixels.

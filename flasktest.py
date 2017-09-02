@@ -34,20 +34,14 @@ app = create_app()
 
 def do_config(formargs):
     global config
+    global buttons
     for key, value in formargs.iteritems():
         if 'submit' in key:
-            pass
-        else: 
-            config[key] = int(value)
+            if value == 'SYSTEM':
+                process_neo_config(formargs)
+            if value == 'BUTTONS':
+                process_button_config(formargs)
 
-    if formargs.has_key('LED_COUNT'):
-        config['LED_COUNT'] = int(formargs['LED_COUNT'])
-    if formargs.has_key('MAX'):
-        config['MAX'] = int(formargs['MAX'])
-        global MAX
-        MAX = int(formargs['MAX'])
-
-    write_config(config)
 
 def neo_queue(job, parameter=None):
     if job == 'neo_off':

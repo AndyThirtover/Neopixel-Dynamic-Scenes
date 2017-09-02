@@ -10,7 +10,9 @@ import os.path
 # keep_out is the time before another button press can be processed.
 debounce = 4
 sleep_time = 0.05
-keep_out = 0.5
+keep_out = 0.7
+button_config_file = "buttons.yaml"
+
 
 buttons = {}
 
@@ -26,32 +28,29 @@ def read_button_config(filename):
             buttons['6'] = {'url':'http://127.0.0.1:5000/command/rotate', 'debounce':debounce}
         write_button_config(filename)
 
-read_button_config('buttons.yaml')
+read_button_config(button_config_file)
+
+def process_button_config(formargs):
+    global buttons
+    for key, value in formargs.iteritems():
+        if 'submit' in key:
+            pass
+        else: 
+            print ("Key: {0} Value {1}".format(key,value))
+            buttons[key]['url'] = value
+    write_button_config(button_config_file)
+
 
 def write_button_config(filename):
+    print ("BUTTON DUMP: {0}".format(buttons))
     rfile = open(filename,'w')
     rfile.write(yaml.dump(buttons))
     rfile.close()
 
 
-def do_button_config(config):
-    print ("BUTTON CONFIG CALLED")
-    global buttons
-    if config.has_key('buttons'):
-        for button in config['buttons']:
-            buttons['button'] = config['buttons'][button]
-    else:
-        # set a default
-        buttons = {
-                    '5':{'url':'http://127.0.0.1:5000/command/neo_off', 'debounce':debounce},
-                    '6':{'url':'http://127.0.0.1:5000/command/rotate', 'debounce':debounce}
-                    }
-        config['buttons'] = buttons        
-    return config
-
-
 
 def action(button):
+    global buttons
     print ("BUTTON at Pin {0} Activated".format(button))
     try:
         urllib2.urlopen(buttons[button]['url'])
@@ -60,6 +59,7 @@ def action(button):
 
 
 def read_button_task(stop_event):
+    global buttons
     print("Button Config at start: {0}".format(buttons))
     GPIO.setmode(GPIO.BCM)
     for button in buttons:
@@ -72,11 +72,10 @@ def read_button_task(stop_event):
 
             if buttons[button]['debounce'] < 0:
                 action(button)
-                time.sleep(keep_out)
                 buttons[button]['debounce'] = debounce
+                time.sleep(keep_out)
         time.sleep(sleep_time)
     print("=== Stopping Button Thread ===")
-
 
 
 if __name__ == "__main__":
