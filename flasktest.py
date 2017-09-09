@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_socketio import SocketIO
 from flask import jsonify
 from flask import render_template
 from flask import request
@@ -31,6 +32,8 @@ def create_app():
     return flapp
 
 app = create_app()
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 def do_config(formargs):
     global config
@@ -196,4 +199,20 @@ def show_docs():
 def show_contact():
     return render_template('contact.html', name='Show Contact Page')
 
-app.run(host='0.0.0.0', debug=True)
+@app.route('/action')
+def show_action():
+    return render_template('action.html', name='SocketIO Action Page')
+
+@socketio.on('connect')
+def handle_connect():
+    print ("==================== Accepted Connection")
+    socketio.emit('accept', {'name':'NeoPixel Driver'})
+
+@socketio.on('message')
+def handle_message(message):
+    print('===================== Received message: ' + repr(message))
+    socketio.emit('message',{'status':'good'})
+
+
+
+socketio.run(app, host='0.0.0.0', debug=True)
