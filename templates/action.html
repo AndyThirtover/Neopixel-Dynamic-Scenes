@@ -48,7 +48,7 @@
       </div>
       <div id="content">
 
-      <h2>Page Content</h2>
+      <h2>SocketIO testing</h2>
 
 <script>
 var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -62,9 +62,23 @@ socket.on('message', function(e){
   console.log("Got Message:", e.status);
   $('#connection_status').text(e.status);
 });
+
+
+socket.on('count_update', function(e){
+  console.log("Got Count:", e.count);
+  $('#Count').text(e.count);
+});
+
+// This seems lame!
+setInterval(function(){
+  socket.emit('get_count',{'data': 'Asked for count'})
+  }
+  ,1000);
+
 </script>
 
     <div>Connection: <span id='connection_status'>Unknown</span></div>
+    <div>Cycle Count: <span id='Count'>Unknown</span></div>
 
       </div>
     </div>

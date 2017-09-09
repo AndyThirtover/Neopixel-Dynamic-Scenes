@@ -213,6 +213,13 @@ def handle_message(message):
     print('===================== Received message: ' + repr(message))
     socketio.emit('message',{'status':'good'})
 
+@socketio.on('get_count')
+def handle_get_count(message):
+    global thread_data
+    print('===================== Received message: ' + repr(message))
+    socketio.emit('count_update',{'count': thread_data['count']})
+
+
 
 
 socketio.run(app, host='0.0.0.0', debug=True)
